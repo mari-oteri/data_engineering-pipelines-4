@@ -2,25 +2,7 @@
 import csv
 import sqlite3
 
-# create connection & database
-conn = sqlite3.connect('dsadb.db')
-
-# create table into db for data storage
-conn.execute('''
-            CREATE TABLE production (
-            product TEXT,
-            amount INTEGER,
-            average_price REAL,
-            total_revenue REAL
-            )
-            ''')
-# recording commands
-conn.commit()
-
-# closing connection
-conn.close()
-
-# read date file
+# read data file
 with open('food_production.csv','r') as file: 
 
     # create file reader
@@ -32,9 +14,27 @@ with open('food_production.csv','r') as file:
     # connect to db
     conn = sqlite3.connect('dsadb.db')
 
+    # drop current table 
+    conn.execute('DROP TABLE IF EXISTS production')
+
+    # create table into db for data storage
+    conn.execute('''
+                CREATE TABLE production (
+                product TEXT,
+                amount INTEGER,
+                average_price REAL,
+                total_revenue REAL
+                )
+                ''')
+
     # insert into db loop
     for row in reader: 
-        conn.execute('INSERT INTO production (product,amount,average_price,total_revenue) VALUES (?,?,?,?)', row)
+    
+    # condition:  amount bigger than 10 
+        if int(row[1]) > 10:
+            conn.execute('INSERT INTO production (product,amount,average_price,total_revenue) VALUES (?,?,?,?)', row)
+     
+
 
     conn.commit()
     conn.close()
