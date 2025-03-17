@@ -2,6 +2,10 @@
 import csv
 import sqlite3
 
+# remove dot from last column
+def remove_dot(value):
+    return int(value.replace('.',''))
+
 # read data file
 with open('food_production.csv','r') as file: 
 
@@ -32,6 +36,11 @@ with open('food_production.csv','r') as file:
     
     # condition:  amount bigger than 10 
         if int(row[1]) > 10:
+
+            # remove dot from the last column and convert into integer
+            row[3]= remove_dot(row[3])
+            
+            # register data into db
             conn.execute('INSERT INTO production (product,amount,average_price,total_revenue) VALUES (?,?,?,?)', row)
      
 
