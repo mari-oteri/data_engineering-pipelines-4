@@ -27,7 +27,8 @@ with open('food_production.csv','r') as file:
                 product TEXT,
                 amount INTEGER,
                 average_price REAL,
-                total_revenue REAL
+                total_revenue INTEGER,
+                profit_margin REAL
                 )
                 ''')
 
@@ -39,9 +40,12 @@ with open('food_production.csv','r') as file:
 
             # remove dot from the last column and convert into integer
             row[3]= remove_dot(row[3])
-            
+
+            # profit margin 
+            profit_margin = (row[3] / float(row[1])) - float(row[2])
+
             # register data into db
-            conn.execute('INSERT INTO production (product,amount,average_price,total_revenue) VALUES (?,?,?,?)', row)
+            conn.execute('INSERT INTO production (product, amount, average_price, total_revenue, profit_margin) VALUES (?, ?, ?, ?, ?)', (row[0], row[1], row[2], row[3], profit_margin))
      
 
 
